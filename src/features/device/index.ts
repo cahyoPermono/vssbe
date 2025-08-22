@@ -29,7 +29,7 @@ const RemoveDeviceSchema = z.object({
 
 const FindAllVehiclesSchema = z.object({
   token: z.string(),
-  isOnline: z.boolean().optional(),
+  isOnline: z.number().optional(),
   pageCount: z.number(),
   pageNum: z.number(),
   keyword: z.string().optional(),
