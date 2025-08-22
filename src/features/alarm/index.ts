@@ -7,8 +7,12 @@ const app = new OpenAPIHono()
 // Zod Schema for Request Body
 const FindAllAlarmsByTimeSchema = z.object({
   token: z.string(),
-  beginTime: z.string(),
-  endTime: z.string(),
+  deviceID: z.string().default("2590000333"),
+  beginTime: z.string().default("2025-08-21 12:12:12"),
+  endTime: z.string().default("2025-08-23 12:12:12"),
+  pageNum: z.number().default(2),
+  pageCount: z.number().default(20),
+  alarmType: z.string().optional().default(""),
 })
 
 // Define the OpenAPI Route
