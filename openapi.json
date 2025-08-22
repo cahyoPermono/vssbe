@@ -1,0 +1,515 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "VSSBE - VSS Backend Proxy Server",
+    "version": "1.0.0",
+    "description": "API documentation for the VSS Backend Proxy Server."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/vss/user/apiLogin.action": {
+      "post": {
+        "summary": "User Login",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The user's name."
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The user's password."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful login"
+          }
+        }
+      }
+    },
+    "/vss/user/apiLogout.action": {
+      "post": {
+        "summary": "User Logout",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogoutRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful logout"
+          }
+        }
+      }
+    },
+    "/vss/vehicle/apiAddDevice.action": {
+      "post": {
+        "summary": "Add Device",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddDeviceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Device added successfully"
+          }
+        }
+      }
+    },
+    "/vss/vehicle/apiModifyDevice.action": {
+      "post": {
+        "summary": "Modify Device",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModifyDeviceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Device modified successfully"
+          }
+        }
+      }
+    },
+    "/vss/vehicle/apiRemoveDevice.action": {
+      "post": {
+        "summary": "Remove Device",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveDeviceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Device removed successfully"
+          }
+        }
+      }
+    },
+    "/vss/onoffline/queryMoreDeviceStatus.action": {
+      "post": {
+        "summary": "Query Device Status",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueryDeviceStatusRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/vss/track/getApiTrackList.action": {
+      "post": {
+        "summary": "Get Track List",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTrackListRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/vss/onoffline/apiFindAll.action": {
+      "post": {
+        "summary": "Find All",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FindAllRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/vss/record/videoFileSearch.action": {
+      "post": {
+        "summary": "Video File Search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VideoFileSearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful search"
+          }
+        }
+      }
+    },
+    "/vss/vss/webdownrecord/insert.action": {
+      "post": {
+        "summary": "Insert Web Down Record",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InsertWebDownRecordRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Record inserted successfully"
+          }
+        }
+      }
+    },
+    "/vss/geofence/apiAddGeofence.action": {
+      "post": {
+        "summary": "Add Geofence",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddGeofenceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Geofence added successfully"
+          }
+        }
+      }
+    },
+    "/vss/driver/apiAddDriver.action": {
+      "post": {
+        "summary": "Add Driver",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddDriverRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Driver added successfully"
+          }
+        }
+      }
+    },
+    "/vss/traffic/consumeRecord.action": {
+      "post": {
+        "summary": "Consume Record",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsumeRecordRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Record consumed successfully"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LogoutRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "AddDeviceRequest": {
+        "type": "object",
+        "properties": {
+          "deviceID": {
+            "type": "string"
+          },
+          "deviceName": {
+            "type": "string"
+          },
+          "deviceType": {
+            "type": "string"
+          },
+          "channelName": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "nodeGuid": {
+            "type": "string"
+          }
+        }
+      },
+      "ModifyDeviceRequest": {
+        "type": "object",
+        "properties": {
+          "deviceID": {
+            "type": "string"
+          },
+          "deviceName": {
+            "type": "string"
+          },
+          "channelName": {
+            "type": "string"
+          },
+          "deviceType": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "RemoveDeviceRequest": {
+        "type": "object",
+        "properties": {
+          "deviceID": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "QueryDeviceStatusRequest": {
+        "type": "object",
+        "properties": {
+          "deviceID": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "GetTrackListRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "deviceID": {
+            "type": "string"
+          },
+          "pageNum": {
+            "type": "integer"
+          },
+          "pageCount": {
+            "type": "integer"
+          },
+          "beginTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          }
+        }
+      },
+      "FindAllRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "pageNum": {
+            "type": "integer"
+          },
+          "pageCount": {
+            "type": "integer"
+          },
+          "deviceID": {
+            "type": "string"
+          },
+          "beginTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          }
+        }
+      },
+      "VideoFileSearchRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "deviceID": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "channelList": {
+            "type": "string"
+          },
+          "fileType": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          }
+        }
+      },
+      "InsertWebDownRecordRequest": {
+        "type": 'object',
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "resStartTime": {
+            "type": "string"
+          },
+          "resEndTime": {
+            "type": "string"
+          },
+          "deviceNo": {
+            "type": "string"
+          },
+          "channel": {
+            "type": "string"
+          },
+          "fileFormat": {
+            "type": "string"
+          }
+        }
+      },
+      "AddGeofenceRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "coordinates": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "radius": {
+            "type": "integer"
+          }
+        }
+      },
+      "AddDriverRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "driverName": {
+            "type": "string"
+          },
+          "fleetID": {
+            "type": "string"
+          }
+        }
+      },
+      "ConsumeRecordRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "deviceID": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
