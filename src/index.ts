@@ -36,19 +36,19 @@ app.get('/', (c) => {
 })
 
 // Feature Routes
-app.route('/vss', alarm)
-app.route('/vss', auth)
-app.route('/vss', device)
-app.route('/vss', driver)
-app.route('/vss', geofence)
-app.route('/vss', onoffline)
-app.route('/vss', passenger)
-app.route('/vss', status)
-app.route('/vss', track)
-app.route('/vss', traffic)
-app.route('/vss', vehicle)
-app.route('/vss', video)
-app.route('/vss', voice)
+app.route('/api', alarm)
+app.route('/api', auth)
+app.route('/api', device)
+app.route('/api', driver)
+app.route('/api', geofence)
+app.route('/api', onoffline)
+app.route('/api', passenger)
+app.route('/api', status)
+app.route('/api', track)
+app.route('/api', traffic)
+app.route('/api', vehicle)
+app.route('/api', video)
+app.route('/api', voice)
 
 // Expose OpenAPI JSON at /doc
 app.doc('/doc', {
