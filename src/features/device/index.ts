@@ -49,4 +49,20 @@ app.post('/vehicle/apiRemoveDevice.action', async (c) => {
   return c.json(data)
 })
 
+app.post("/vehicle/findAll.action", async (c) => {
+  const { token, isOnline, pageCount, pageNum, keyword } = await c.req.json();
+  const response = await fetch(
+    `${VSS_API_URL}/vehicle/findAll.action`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token, isOnline, pageCount, pageNum, keyword }),
+    }
+  );
+  const data = await response.json();
+  return c.json(data);
+})
+
 export default app

@@ -4,7 +4,7 @@ import { VSS_API_URL } from '../../config.js'
 const app = new Hono()
 
 // Proxy Login API Route
-app.get('/user/apiLogin.action', async (c) => {
+app.post('/user/apiLogin.action', async (c) => {
   const username = c.req.query('username')
   const password = c.req.query('password')
 
