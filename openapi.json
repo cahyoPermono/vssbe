@@ -12,7 +12,24 @@
     }
   ],
   "paths": {
-    "/vss/user/apiLogin.action": {
+    "/": {
+      "get": {
+        "summary": "Root Route",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "VSS BE Proxy Running!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/apiLogin.action": {
       "post": {
         "summary": "User Login",
         "parameters": [
@@ -42,7 +59,7 @@
         }
       }
     },
-    "/vss/user/apiLogout.action": {
+    "/user/apiLogout.action": {
       "post": {
         "summary": "User Logout",
         "requestBody": {
@@ -62,7 +79,7 @@
         }
       }
     },
-    "/vss/vehicle/apiAddDevice.action": {
+    "/vehicle/apiAddDevice.action": {
       "post": {
         "summary": "Add Device",
         "requestBody": {
@@ -82,7 +99,7 @@
         }
       }
     },
-    "/vss/vehicle/apiModifyDevice.action": {
+    "/vehicle/apiModifyDevice.action": {
       "post": {
         "summary": "Modify Device",
         "requestBody": {
@@ -102,7 +119,7 @@
         }
       }
     },
-    "/vss/vehicle/apiRemoveDevice.action": {
+    "/vehicle/apiRemoveDevice.action": {
       "post": {
         "summary": "Remove Device",
         "requestBody": {
@@ -122,15 +139,15 @@
         }
       }
     },
-    "/vss/onoffline/queryMoreDeviceStatus.action": {
+    "/vehicle/findAll.action": {
       "post": {
-        "summary": "Query Device Status",
+        "summary": "Find All Vehicles",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/QueryDeviceStatusRequest"
+                "$ref": "#/components/schemas/FindAllVehiclesRequest"
               }
             }
           }
@@ -142,107 +159,7 @@
         }
       }
     },
-    "/vss/track/getApiTrackList.action": {
-      "post": {
-        "summary": "Get Track List",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetTrackListRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful query"
-          }
-        }
-      }
-    },
-    "/vss/onoffline/apiFindAll.action": {
-      "post": {
-        "summary": "Find All",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FindAllRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful query"
-          }
-        }
-      }
-    },
-    "/vss/record/videoFileSearch.action": {
-      "post": {
-        "summary": "Video File Search",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VideoFileSearchRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful search"
-          }
-        }
-      }
-    },
-    "/vss/vss/webdownrecord/insert.action": {
-      "post": {
-        "summary": "Insert Web Down Record",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InsertWebDownRecordRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Record inserted successfully"
-          }
-        }
-      }
-    },
-    "/vss/geofence/apiAddGeofence.action": {
-      "post": {
-        "summary": "Add Geofence",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddGeofenceRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Geofence added successfully"
-          }
-        }
-      }
-    },
-    "/vss/driver/apiAddDriver.action": {
+    "/driver/apiAddDriver.action": {
       "post": {
         "summary": "Add Driver",
         "requestBody": {
@@ -262,9 +179,89 @@
         }
       }
     },
-    "/vss/traffic/consumeRecord.action": {
+    "/geofence/apiAddGeofence.action": {
       "post": {
-        "summary": "Consume Record",
+        "summary": "Add Geofence",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddGeofenceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Geofence added successfully"
+          }
+        }
+      }
+    },
+    "/onoffline/queryMoreDeviceStatus.action": {
+      "post": {
+        "summary": "Query Device Status",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueryDeviceStatusRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/track/getApiTrackList.action": {
+      "post": {
+        "summary": "Get API Track List",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTrackListRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/onoffline/apiFindAll.action": {
+      "post": {
+        "summary": "Find All On/Offline Records",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FindAllRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/traffic/consumeRecord.action": {
+      "post": {
+        "summary": "Consume Traffic Record",
         "requestBody": {
           "required": true,
           "content": {
@@ -278,6 +275,340 @@
         "responses": {
           "200": {
             "description": "Record consumed successfully"
+          }
+        }
+      }
+    },
+    "/record/videoFileSearch.action": {
+      "post": {
+        "summary": "Video File Search",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VideoFileSearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful search"
+          }
+        }
+      }
+    },
+    "/vss/alarm/apiFindAllByTime.action": {
+      "post": {
+        "summary": "Find All Alarms by Time",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/vss/onoffline/apiFindAll.action": {
+      "post": {
+        "summary": "Find All VSS On/Offline Records",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/vss/passengerrecord/detail.action": {
+      "post": {
+        "summary": "Passenger Record Detail",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/vss/passengerrecord/statistics.action": {
+      "post": {
+        "summary": "Passenger Record Statistics",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/vss/track/getTrackList.action": {
+      "post": {
+        "summary": "Get VSS Track List",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/vss/track/getApiTrackList.action": {
+      "post": {
+        "summary": "Get VSS API Track List",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/vss/vehicle/getVehicleSetting.action": {
+      "post": {
+        "summary": "Get Vehicle Setting",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/vss/vehicle/apiVehicleSetting.action": {
+      "post": {
+        "summary": "API Vehicle Setting",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful query"
+          }
+        }
+      }
+    },
+    "/vss/webdownrecord/insert.action": {
+      "post": {
+        "summary": "Insert Web Down Record",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InsertWebDownRecordRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Record inserted successfully"
+          }
+        }
+      }
+    },
+    "/vss/voice/addVoiceFile.action": {
+      "post": {
+        "summary": "Add Voice File",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/vss/voice/deleteVoiceFile.action": {
+      "post": {
+        "summary": "Delete Voice File",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/vss/voice/updateVoiceFile.action": {
+      "post": {
+        "summary": "Update Voice File",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/vss/voice/getVoiceFile.action": {
+      "post": {
+        "summary": "Get Voice File",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/vss/voice/issueVoiceFile.action": {
+      "post": {
+        "summary": "Issue Voice File",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
+    "/vss/voice/openVoice.action": {
+      "post": {
+        "summary": "Open Voice",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation"
           }
         }
       }
@@ -346,6 +677,26 @@
             "type": "string"
           },
           "token": {
+            "type": "string"
+          }
+        }
+      },
+      "FindAllVehiclesRequest": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "isOnline": {
+            "type": "boolean"
+          },
+          "pageCount": {
+            "type": "integer"
+          },
+          "pageNum": {
+            "type": "integer"
+          },
+          "keyword": {
             "type": "string"
           }
         }
@@ -434,7 +785,7 @@
         }
       },
       "InsertWebDownRecordRequest": {
-        "type": 'object',
+        "type": "object",
         "properties": {
           "token": {
             "type": "string"

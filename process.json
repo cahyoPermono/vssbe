@@ -1,0 +1,13 @@
+[
+  {
+    "name": "vssbe-proxy",
+    "script": "dist/index.js",
+    "interpreter": "node",
+    "exec_mode": "fork",
+    "instances": 1,
+    "watch": false,
+    "env": {
+      "NODE_ENV": "production"
+    }
+  }
+]
