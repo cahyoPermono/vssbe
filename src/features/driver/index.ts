@@ -1,22 +1,68 @@
-import { Hono } from 'hono'
+import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
+import { z } from 'zod'
 import { VSS_API_URL } from '../../config.js'
 
-const app = new Hono()
+const app = new OpenAPIHono()
 
-// Driver Management API Routes
-app.post('/driver/apiAddDriver.action', async (c) => {
-  const { token, driverName, fleetID } = await c.req.json()
+// Schemas
+const AddDriverSchema = z.object({
+  token: z.string(),
+  driverName: z.string(),
+  fleetID: z.string(),
+})
 
-  const response = await fetch(`${VSS_API_URL}/driver/apiAddDriver.action`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+// Routes
+const addDriverRoute = createRoute({
+  method: 'post',
+  path: '/driver/apiAddDriver.action',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: AddDriverSchema,
+        },
+      },
     },
-    body: JSON.stringify({ token, driverName, fleetID })
-  })
+  },
+  responses: {
+    200: {
+      description: 'Driver added successfully',
+      content: {
+        'application/json': {
+          schema: z.object({}),
+        },
+      },
+    },
+    500: {
+      description: 'Internal Server Error',
+      content: {
+        'application/json': {
+          schema: z.object({ error: z.string() }),
+        },
+      },
+    },
+  },
+  summary: 'Add Driver',
+  description: 'Adds a new driver.',
+  tags: ['Driver'], // Added tag
+})
 
-  const data = await response.json()
-  return c.json(data)
+// Register routes
+app.openapi(addDriverRoute, async (c) => {
+  try {
+    const body = c.req.valid('json')
+    const response = await fetch(`${VSS_API_URL}/driver/apiAddDriver.action`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    const data = await response.json()
+    return c.json(data)
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
+  }
 })
 
 export default app

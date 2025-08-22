@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "VSSBE - VSS Backend Proxy Server",
+    "title": "ICOGNIS Backend Proxy Server",
     "version": "1.0.0",
-    "description": "API documentation for the VSS Backend Proxy Server."
+    "description": "API documentation for the ICOGNIS Backend Server."
   },
   "servers": [
     {

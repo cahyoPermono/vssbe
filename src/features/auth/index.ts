@@ -1,33 +1,115 @@
-import { Hono } from 'hono'
+import { OpenAPIHono, createRoute } from '@hono/zod-openapi'
+import { z } from 'zod'
 import { VSS_API_URL } from '../../config.js'
 
-const app = new Hono()
+const app = new OpenAPIHono()
 
-// Proxy Login API Route
-app.post('/user/apiLogin.action', async (c) => {
-  const username = c.req.query('username')
-  const password = c.req.query('password')
-
-  const response = await fetch(`${VSS_API_URL}/user/apiLogin.action?username=${"imaniprima"}&password=${"a95cf0e4d562a9055b2643e9d7abacc0"}`)
-
-  const data = await response.json()
-  return c.json(data)
+// Zod Schema for Login Query Parameters
+const LoginQuerySchema = z.object({
+  username: z.string(),
+  password: z.string(),
 })
 
-// Proxy Logout API Route
-app.post('/user/apiLogout.action', async (c) => {
-  const { username, token } = await c.req.json()
-
-  const response = await fetch(`${VSS_API_URL}/user/apiLogout.action`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+// Define the Login OpenAPI Route
+const loginRoute = createRoute({
+  method: 'post',
+  path: '/user/apiLogin.action',
+  request: {
+    query: LoginQuerySchema,
+  },
+  responses: {
+    200: {
+      description: 'Successful login',
+      content: {
+        'application/json': {
+          schema: z.object({}), // Assuming a generic successful response for now
+        },
+      },
     },
-    body: JSON.stringify({ username, token })
-  })
+    500: {
+      description: 'Internal Server Error',
+      content: {
+        'application/json': {
+          schema: z.object({ error: z.string() }),
+        },
+      },
+    },
+  },
+  summary: 'User Login',
+  description: 'Authenticates a user and returns a token.',
+  tags: ['Auth'], // Added tag
+})
 
-  const data = await response.json()
-  return c.json(data)
+// Register the Login route with OpenAPIHono
+app.openapi(loginRoute, async (c) => {
+  try {
+    const { username, password } = c.req.valid('query')
+    const response = await fetch(`${VSS_API_URL}/user/apiLogin.action?username=${username}&password=${password}`)
+    const data = await response.json()
+    return c.json(data)
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
+  }
+})
+
+// Zod Schema for Logout Request Body
+const LogoutBodySchema = z.object({
+  username: z.string(),
+  token: z.string(),
+})
+
+// Define the Logout OpenAPI Route
+const logoutRoute = createRoute({
+  method: 'post',
+  path: '/user/apiLogout.action',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: LogoutBodySchema,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Successful logout',
+      content: {
+        'application/json': {
+          schema: z.object({}), // Assuming a generic successful response for now
+        },
+      },
+    },
+    500: {
+      description: 'Internal Server Error',
+      content: {
+        'application/json': {
+          schema: z.object({ error: z.string() }),
+        },
+      },
+    },
+  },
+  summary: 'User Logout',
+  description: 'Logs out a user.',
+  tags: ['Auth'], // Added tag
+})
+
+// Register the Logout route with OpenAPIHono
+app.openapi(logoutRoute, async (c) => {
+  try {
+    const body = c.req.valid('json')
+    const response = await fetch(`${VSS_API_URL}/user/apiLogout.action`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    const data = await response.json()
+    return c.json(data)
+  } catch (error) {
+    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
+  }
 })
 
 export default app

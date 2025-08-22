@@ -1,4 +1,4 @@
-# VSSBE - VSS Backend Proxy Server
+# ICOGNIS Backend Proxy Server
 
 This project is a backend proxy server built with Hono and Node.js. It proxies requests to an external VSS (Vehicle Security System) API, providing a simplified interface and a single point of entry for frontend applications.
 
