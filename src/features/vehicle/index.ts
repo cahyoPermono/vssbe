@@ -20,3 +20,5 @@ app.post("/vss/vehicle/apiVehicleSetting.action", async (c) => {
         return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
     }
 });
+
+export default app
