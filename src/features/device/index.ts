@@ -65,4 +65,20 @@ app.post("/vehicle/findAll.action", async (c) => {
   return c.json(data);
 })
 
+app.post("/vehicle/getDeviceStatus.action", async (c) => {
+  const { token, deviceID } = await c.req.json();
+  const response = await fetch(
+    `${VSS_API_URL}/vehicle/getDeviceStatus.action`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token, deviceID }),
+    }
+  );
+  const data = await response.json();
+  return c.json(data);
+})
+
 export default app

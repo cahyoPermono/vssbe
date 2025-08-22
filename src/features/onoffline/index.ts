@@ -12,4 +12,34 @@ app.post("/vss/onoffline/apiFindAll.action", async (c) => {
     }
 });
 
+app.post('/onoffline/queryDeviceStatus.action', async (c) => {
+  const { deviceID, token } = await c.req.json()
+
+  const response = await fetch(`${VSS_API_URL}/onoffline/queryDeviceStatus.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ deviceID, token })
+  })
+
+  const data = await response.json()
+  return c.json(data)
+})
+
+app.post('/onoffline/queryMoreDeviceStatus.action', async (c) => {
+  const { deviceID, token } = await c.req.json()
+
+  const response = await fetch(`${VSS_API_URL}/onoffline/queryMoreDeviceStatus.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ deviceID, token })
+  })
+
+  const data = await response.json()
+  return c.json(data)
+})
+
 export default app
