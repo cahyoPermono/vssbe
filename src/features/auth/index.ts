@@ -5,7 +5,7 @@ import { VSS_API_URL } from '../../config.js'
 const app = new OpenAPIHono()
 
 // Zod Schema for Login Query Parameters
-const LoginQuerySchema = z.object({
+const LoginBodySchema = z.object({
   username: z.string(),
   password: z.string(),
 })
@@ -15,7 +15,13 @@ const loginRoute = createRoute({
   method: 'post',
   path: '/user/apiLogin.action',
   request: {
-    query: LoginQuerySchema,
+    body: {
+      content: {
+        'application/json': {
+          schema: LoginBodySchema,
+        },
+      },
+    },
   },
   responses: {
     200: {
@@ -43,8 +49,15 @@ const loginRoute = createRoute({
 // Register the Login route with OpenAPIHono
 app.openapi(loginRoute, async (c) => {
   try {
-    const { username, password } = c.req.valid('query')
-    const response = await fetch(`${VSS_API_URL}/user/apiLogin.action?username=${"imaniprima"}&password=${"a95cf0e4d562a9055b2643e9d7abacc0"}`)
+    const body = c.req.valid('json')
+    const response = await fetch(`${VSS_API_URL}/user/apiLogin.action`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({username: "imaniprima", password: "a95cf0e4d562a9055b2643e9d7abacc0"}),
+    })
+    // const response = await fetch(`${VSS_API_URL}/user/apiLogin.action?username=${"imaniprima"}&password=${"a95cf0e4d562a9055b2643e9d7abacc0"}`)
     const data = await response.json()
     return c.json(data)
   } catch (error) {
