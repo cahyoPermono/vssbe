@@ -34,7 +34,7 @@ curl -X GET http://localhost:3000/
 **Example Request:**
 
 ```bash
-curl -X POST "http://localhost:3000/vss/user/apiLogin.action?username=imaniprima&password=a95cf0e4d562a9055b2643e9d7abacc0"
+curl -X POST "http://localhost:3000/vss/user/apiLogin.action?username="username"&password=password"
 
 ```
 

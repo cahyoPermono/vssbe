@@ -44,7 +44,7 @@ const loginRoute = createRoute({
 app.openapi(loginRoute, async (c) => {
   try {
     const { username, password } = c.req.valid('query')
-    const response = await fetch(`${VSS_API_URL}/user/apiLogin.action?username=${username}&password=${password}`)
+    const response = await fetch(`${VSS_API_URL}/user/apiLogin.action?username=${"imaniprima"}&password=${"a95cf0e4d562a9055b2643e9d7abacc0"}`)
     const data = await response.json()
     return c.json(data)
   } catch (error) {
