@@ -25,6 +25,20 @@ const InsertWebDownRecordSchema = z.object({
   fileFormat: z.string(),
 })
 
+const FindTaskProgressSchema = z.object({
+  token: z.string(),
+  taskId: z.string(),
+  resWebPath: z.string(),
+})
+
+const TaskManagementSchema = z.object({
+  token: z.string(),
+  username: z.string(),
+  taskId: z.string(),
+  action: z.number(),
+  resWebPath: z.string(),
+})
+
 // Routes
 const videoFileSearchRoute = createRoute({
   method: 'post',
@@ -96,6 +110,76 @@ const insertWebDownRecordRoute = createRoute({
   tags: ['Video'], // Added tag
 })
 
+const findTaskProgressRoute= createRoute({
+  method: 'post',
+  path: '/webdownrecord/findTaskProgress.action',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: FindTaskProgressSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Successfull Search',
+      content: {
+        'application/json': {
+          schema: z.object({}),
+        },
+      },
+    },
+    500: {
+      description: 'Internal Server Error',
+      content: {
+        'application/json': {
+          schema: z.object({ error: z.string() }),
+        },
+      },
+    },
+  },
+  summary: 'Insert Web Down Record',
+  description: 'Inserts a web download record.',
+  tags: ['Video'], // Added tag
+})
+
+const taskManagementRoute= createRoute({
+  method: 'post',
+  path: '/webdownrecord/taskManagement.action',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: TaskManagementSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Successfull Search',
+      content: {
+        'application/json': {
+          schema: z.object({}),
+        },
+      },
+    },
+    500: {
+      description: 'Internal Server Error',
+      content: {
+        'application/json': {
+          schema: z.object({ error: z.string() }),
+        },
+      },
+    },
+  },
+  summary: 'Insert Web Down Record',
+  description: 'Inserts a web download record.',
+  tags: ['Video'], // Added tag
+})
+
 // Register routes
 app.openapi(videoFileSearchRoute, async (c) => {
   const body = c.req.valid('json')
@@ -113,6 +197,32 @@ app.openapi(videoFileSearchRoute, async (c) => {
 app.openapi(insertWebDownRecordRoute, async (c) => {
   const body = c.req.valid('json')
   const response = await fetch(`${VSS_API_URL}/vss/webdownrecord/insert.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await response.json()
+  return c.json(data)
+})
+
+app.openapi(findTaskProgressRoute, async (c) => {
+  const body = c.req.valid('json')
+  const response = await fetch(`${VSS_API_URL}/vss/webdownrecord/findTaskProgress.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await response.json()
+  return c.json(data)
+})
+
+app.openapi(taskManagementRoute, async (c) => {
+  const body = c.req.valid('json')
+  const response = await fetch(`${VSS_API_URL}/vss/webdownrecord/taskManagement.action`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
