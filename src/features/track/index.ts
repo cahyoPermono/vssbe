@@ -8,6 +8,8 @@ const app = new OpenAPIHono()
 const GetTrackListSchema = z.object({
   token: z.string(),
   deviceID: z.string(),
+  pageNum: z.number(),
+  pageCount: z.number(),
   beginTime: z.string(),
   endTime: z.string(),
 })
@@ -94,37 +96,29 @@ const getApiTrackListRoute = createRoute({
 
 // Register routes
 app.openapi(getTrackListRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const result = await fetch(`${VSS_API_URL}/vss/track/getTrackList.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    const data = await result.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const result = await fetch(`${VSS_API_URL}/vss/track/getTrackList.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await result.json()
+  return c.json(data)
 })
 
 app.openapi(getApiTrackListRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const result = await fetch(`${VSS_API_URL}/vss/track/getApiTrackList.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    const data = await result.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const result = await fetch(`${VSS_API_URL}/vss/track/getApiTrackList.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await result.json()
+  return c.json(data)
 })
 
 export default app

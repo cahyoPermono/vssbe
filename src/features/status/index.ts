@@ -96,37 +96,29 @@ const onOfflineApiFindAllRoute = createRoute({
 
 // Register routes
 app.openapi(getApiTrackListRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const response = await fetch(`${VSS_API_URL}/track/getApiTrackList.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    const data = await response.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const response = await fetch(`${VSS_API_URL}/track/getApiTrackList.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await response.json()
+  return c.json(data)
 })
 
 app.openapi(onOfflineApiFindAllRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const response = await fetch(`${VSS_API_URL}/onoffline/apiFindAll.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    const data = await response.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const response = await fetch(`${VSS_API_URL}/onoffline/apiFindAll.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await response.json()
+  return c.json(data)
 })
 
 export default app

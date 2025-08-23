@@ -48,21 +48,17 @@ const loginRoute = createRoute({
 
 // Register the Login route with OpenAPIHono
 app.openapi(loginRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const response = await fetch(`${VSS_API_URL}/user/apiLogin.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({username: "imaniprima", password: "a95cf0e4d562a9055b2643e9d7abacc0"}),
-    })
-    // const response = await fetch(`${VSS_API_URL}/user/apiLogin.action?username=${"imaniprima"}&password=${"a95cf0e4d562a9055b2643e9d7abacc0"}`)
-    const data = await response.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const response = await fetch(`${VSS_API_URL}/user/apiLogin.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username: 'imaniprima', password: 'a95cf0e4d562a9055b2643e9d7abacc0' }),
+  })
+  // const response = await fetch(`${VSS_API_URL}/user/apiLogin.action?username=${'imaniprima'}&password=${'a95cf0e4d562a9055b2643e9d7abacc0'}`)
+  const data = await response.json()
+  return c.json(data)
 })
 
 // Zod Schema for Logout Request Body
@@ -109,20 +105,18 @@ const logoutRoute = createRoute({
 
 // Register the Logout route with OpenAPIHono
 app.openapi(logoutRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const response = await fetch(`${VSS_API_URL}/user/apiLogout.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    const data = await response.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const response = await fetch(`${VSS_API_URL}/user/apiLogout.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await response.json()
+  return c.json(data)
 })
+
+
 
 export default app

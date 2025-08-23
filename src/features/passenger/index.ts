@@ -89,37 +89,29 @@ const passengerRecordStatisticsRoute = createRoute({
 
 // Register routes
 app.openapi(passengerRecordDetailRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const result = await fetch(`${VSS_API_URL}/vss/passengerrecord/detail.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    const data = await result.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const result = await fetch(`${VSS_API_URL}/vss/passengerrecord/detail.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await result.json()
+  return c.json(data)
 })
 
 app.openapi(passengerRecordStatisticsRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const result = await fetch(`${VSS_API_URL}/vss/passengerrecord/statistics.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    const data = await result.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const result = await fetch(`${VSS_API_URL}/vss/passengerrecord/statistics.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await result.json()
+  return c.json(data)
 })
 
 export default app

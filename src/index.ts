@@ -6,6 +6,8 @@ import { prettyJSON } from 'hono/pretty-json'
 import { secureHeaders } from 'hono/secure-headers'
 import { swaggerUI } from '@hono/swagger-ui'
 import { OpenAPIHono } from '@hono/zod-openapi'
+import { HTTPException } from 'hono/http-exception'
+import { ZodError } from 'zod'
 
 // Import Feature Modules
 import alarm from './features/alarm/index.js'
@@ -22,7 +24,53 @@ import vehicle from './features/vehicle/index.js'
 import video from './features/video/index.js'
 import voice from './features/voice/index.js'
 
-const app = new OpenAPIHono() // Changed from Hono to OpenAPIHono
+const app = new OpenAPIHono({
+  defaultHook: (result, c) => {
+    if (!result.success) {
+      throw new HTTPException(400, {
+        message: 'Validation Failed',
+        cause: result.error,
+      })
+    }
+  },
+}) // Changed from Hono to OpenAPIHono
+
+// Custom Error Handler
+app.onError((err, c) => {
+  if (err instanceof HTTPException) {
+    if (err.cause instanceof ZodError) {
+      const issues = err.cause.issues.map((issue) => {
+        const path = issue.path.join('.')
+        const message = issue.message.toLowerCase()
+        return `Invalid input for ${path}: ${message}`
+      })
+      const message = issues.join('; ')
+      return c.json(
+        {
+          success: false,
+          error: {
+            name: 'ZodError',
+            message,
+          },
+        },
+        err.status,
+      )
+    }
+    return err.getResponse()
+  }
+
+  // Fallback for other errors
+  return c.json(
+    {
+      success: false,
+      error: {
+        name: 'Error',
+        message: 'Internal Server Error',
+      },
+    },
+    500,
+  )
+})
 
 // Middlewares
 app.use('*', logger())

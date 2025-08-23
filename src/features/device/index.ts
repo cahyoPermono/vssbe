@@ -218,88 +218,68 @@ const getDeviceStatusRoute = createRoute({
 
 // Register routes
 app.openapi(addDeviceRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const response = await fetch(`${VSS_API_URL}/vehicle/apiAddDevice.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    const data = await response.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const response = await fetch(`${VSS_API_URL}/vehicle/apiAddDevice.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await response.json()
+  return c.json(data)
 })
 
 app.openapi(modifyDeviceRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const response = await fetch(`${VSS_API_URL}/vehicle/apiModifyDevice.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    const data = await response.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const response = await fetch(`${VSS_API_URL}/vehicle/apiModifyDevice.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await response.json()
+  return c.json(data)
 })
 
 app.openapi(removeDeviceRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const response = await fetch(`${VSS_API_URL}/vehicle/apiRemoveDevice.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    const data = await response.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const response = await fetch(`${VSS_API_URL}/vehicle/apiRemoveDevice.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await response.json()
+  return c.json(data)
 })
 
 app.openapi(findAllVehiclesRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const response = await fetch(`${VSS_API_URL}/vehicle/findAll.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    const data = await response.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const response = await fetch(`${VSS_API_URL}/vehicle/findAll.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await response.json()
+  return c.json(data)
 })
 
 app.openapi(getDeviceStatusRoute, async (c) => {
-  try {
-    const body = c.req.valid('json')
-    const response = await fetch(`${VSS_API_URL}/vehicle/getDeviceStatus.action`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    const data = await response.json()
-    return c.json(data)
-  } catch (error) {
-    return c.json({ error: error instanceof Error ? error.message : String(error) }, 500)
-  }
+  const body = c.req.valid('json')
+  const response = await fetch(`${VSS_API_URL}/vehicle/getDeviceStatus.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await response.json()
+  return c.json(data)
 })
 
 export default app
