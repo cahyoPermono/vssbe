@@ -24,6 +24,7 @@ import vehicle from './features/vehicle/index.js'
 import video from './features/video/index.js'
 import voice from './features/voice/index.js'
 import record from './features/record/index.js'
+import area from './features/area/index.js'
 
 const app = new OpenAPIHono({
   defaultHook: (result, c) => {
@@ -99,6 +100,7 @@ app.route('/api', traffic)
 app.route('/api', vehicle)
 app.route('/api', video)
 app.route('/api', voice)
+app.route('/api', area)
 
 // Expose OpenAPI JSON at /doc
 app.doc('/doc', {
@@ -128,6 +130,8 @@ app.doc('/doc', {
     { name: 'Vehicle', description: 'Vehicle management operations' },
     { name: 'Video', description: 'Video and file management operations' },
     { name: 'Voice', description: 'Voice communication operations' },
+    { name: 'Geofence Area', description: 'Geofence group and area management operations' },
+    { name: 'Geofence Area Device', description: 'Geofence and device mapping operations' },
   ],
 })
 
