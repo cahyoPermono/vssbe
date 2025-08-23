@@ -23,6 +23,7 @@ import traffic from './features/traffic/index.js'
 import vehicle from './features/vehicle/index.js'
 import video from './features/video/index.js'
 import voice from './features/voice/index.js'
+import record from './features/record/index.js'
 
 const app = new OpenAPIHono({
   defaultHook: (result, c) => {
@@ -91,6 +92,7 @@ app.route('/api', driver)
 app.route('/api', geofence)
 app.route('/api', onoffline)
 app.route('/api', passenger)
+app.route('/api', record)
 app.route('/api', status)
 app.route('/api', track)
 app.route('/api', traffic)
