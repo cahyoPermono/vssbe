@@ -130,6 +130,7 @@ app.doc('/doc', {
     { name: 'Vehicle', description: 'Vehicle management operations' },
     { name: 'Video', description: 'Video and file management operations' },
     { name: 'Voice', description: 'Voice communication operations' },
+    { name: 'Record', description: 'Device Record operations' },
     { name: 'Geofence Area', description: 'Geofence group and area management operations' },
     { name: 'Geofence Area Device', description: 'Geofence and device mapping operations' },
   ],
