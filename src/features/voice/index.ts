@@ -4,77 +4,46 @@ import { VSS_API_URL } from '../../config.js'
 
 const app = new OpenAPIHono()
 
-// Schemas
+// 3.21.1 Add voice file
 const AddVoiceFileSchema = z.object({
   token: z.string(),
-  fileName: z.string(),
-  fileContent: z.string(), // Assuming base64 encoded content
-})
-
-const DeleteVoiceFileSchema = z.object({
-  token: z.string(),
-  fileId: z.string(),
-})
-
-const UpdateVoiceFileSchema = z.object({
-  token: z.string(),
-  fileId: z.string(),
-  newFileName: z.string().optional(),
-  newFileContent: z.string().optional(), // Assuming base64 encoded content
-})
-
-const GetVoiceFileSchema = z.object({
-  token: z.string(),
-  fileId: z.string(),
-})
-
-const IssueVoiceFileSchema = z.object({
-  token: z.string(),
-  fileId: z.string(),
-  deviceId: z.string(),
-})
-
-const OpenVoiceSchema = z.object({
-  token: z.string(),
-  deviceId: z.string(),
-})
-
-// Routes
+  lang: z.string().optional(),
+  issueCallbackUrl: z.string(),
+  voicePackageName: z.string(),
+  voicePackageNo: z.string(),
+  // voiceFile: z.instanceof(File) // Cannot be validated like this in Hono/Node server for multipart
+});
 const addVoiceFileRoute = createRoute({
   method: 'post',
   path: '/voice/addVoiceFile.action',
   request: {
     body: {
       content: {
-        'application/json': {
+        'multipart/form-data': {
           schema: AddVoiceFileSchema,
         },
       },
     },
   },
-  responses: {
-    200: {
-      description: 'Successful operation',
-      content: {
-        'application/json': {
-          schema: z.object({}),
-        },
-      },
-    },
-    500: {
-      description: 'Internal Server Error',
-      content: {
-        'application/json': {
-          schema: z.object({ error: z.string() }),
-        },
-      },
-    },
-  },
-  summary: 'Add Voice File',
-  description: 'Adds a new voice file.',
-  tags: ['Voice'], // Added tag
-})
+  responses: { 200: { description: 'Success' } },
+  summary: 'Add voice file',
+  tags: ['Voice'],
+});
+app.openapi(addVoiceFileRoute, async (c) => {
+  const body = await c.req.parseBody();
+  const response = await fetch(`${VSS_API_URL}/vss/voice/addVoiceFile.action`, {
+    method: 'POST',
+    body: body as any,
+  });
+  const data = await response.json();
+  return c.json(data);
+});
 
+// 3.21.2 Delete voice files
+const DeleteVoiceFileSchema = z.object({
+  voicePackageNo: z.string(),
+  token: z.string(),
+});
 const deleteVoiceFileRoute = createRoute({
   method: 'post',
   path: '/voice/deleteVoiceFile.action',
@@ -87,29 +56,28 @@ const deleteVoiceFileRoute = createRoute({
       },
     },
   },
-  responses: {
-    200: {
-      description: 'Successful operation',
-      content: {
-        'application/json': {
-          schema: z.object({}),
-        },
-      },
-    },
-    500: {
-      description: 'Internal Server Error',
-      content: {
-        'application/json': {
-          schema: z.object({ error: z.string() }),
-        },
-      },
-    },
-  },
-  summary: 'Delete Voice File',
-  description: 'Deletes a voice file.',
-  tags: ['Voice'], // Added tag
-})
+  responses: { 200: { description: 'Success' } },
+  summary: 'Delete voice files',
+  tags: ['Voice'],
+});
+app.openapi(deleteVoiceFileRoute, async (c) => {
+  const body = c.req.valid('json');
+  const response = await fetch(`${VSS_API_URL}/vss/voice/deleteVoiceFile.action`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return c.json(data);
+});
 
+// 3.21.3 Modify the voice file information
+const UpdateVoiceFileSchema = z.object({
+  token: z.string(),
+  issueCallbackUrl: z.string().optional(),
+  voicePackageName: z.string().optional(),
+  voicePackageNo: z.string(),
+});
 const updateVoiceFileRoute = createRoute({
   method: 'post',
   path: '/voice/updateVoiceFile.action',
@@ -122,29 +90,25 @@ const updateVoiceFileRoute = createRoute({
       },
     },
   },
-  responses: {
-    200: {
-      description: 'Successful operation',
-      content: {
-        'application/json': {
-          schema: z.object({}),
-        },
-      },
-    },
-    500: {
-      description: 'Internal Server Error',
-      content: {
-        'application/json': {
-          schema: z.object({ error: z.string() }),
-        },
-      },
-    },
-  },
-  summary: 'Update Voice File',
-  description: 'Updates an existing voice file.',
-  tags: ['Voice'], // Added tag
-})
+  responses: { 200: { description: 'Success' } },
+  summary: 'Modify the voice file information',
+  tags: ['Voice'],
+});
+app.openapi(updateVoiceFileRoute, async (c) => {
+  const body = c.req.valid('json');
+  const response = await fetch(`${VSS_API_URL}/vss/voice/updateVoiceFile.action`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return c.json(data);
+});
 
+// 3.21.4 Query voice files
+const GetVoiceFileSchema = z.object({
+  token: z.string(),
+});
 const getVoiceFileRoute = createRoute({
   method: 'post',
   path: '/voice/getVoiceFile.action',
@@ -157,29 +121,28 @@ const getVoiceFileRoute = createRoute({
       },
     },
   },
-  responses: {
-    200: {
-      description: 'Successful operation',
-      content: {
-        'application/json': {
-          schema: z.object({}),
-        },
-      },
-    },
-    500: {
-      description: 'Internal Server Error',
-      content: {
-        'application/json': {
-          schema: z.object({ error: z.string() }),
-        },
-      },
-    },
-  },
-  summary: 'Get Voice File',
-  description: 'Retrieves a voice file.',
-  tags: ['Voice'], // Added tag
-})
+  responses: { 200: { description: 'Success' } },
+  summary: 'Query voice files',
+  tags: ['Voice'],
+});
+app.openapi(getVoiceFileRoute, async (c) => {
+  const body = c.req.valid('json');
+  const response = await fetch(`${VSS_API_URL}/vss/voice/getVoiceFile.action`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return c.json(data);
+});
 
+// 3.21.5 Send voice files to a device
+const IssueVoiceFileSchema = z.object({
+  voicePackageNo: z.string(),
+  deviceId: z.string(),
+  sessionId: z.string(),
+  token: z.string(),
+});
 const issueVoiceFileRoute = createRoute({
   method: 'post',
   path: '/voice/issueVoiceFile.action',
@@ -192,29 +155,27 @@ const issueVoiceFileRoute = createRoute({
       },
     },
   },
-  responses: {
-    200: {
-      description: 'Successful operation',
-      content: {
-        'application/json': {
-          schema: z.object({}),
-        },
-      },
-    },
-    500: {
-      description: 'Internal Server Error',
-      content: {
-        'application/json': {
-          schema: z.object({ error: z.string() }),
-        },
-      },
-    },
-  },
-  summary: 'Issue Voice File',
-  description: 'Issues a voice file.',
-  tags: ['Voice'], // Added tag
-})
+  responses: { 200: { description: 'Success' } },
+  summary: 'Send voice files to a device',
+  tags: ['Voice'],
+});
+app.openapi(issueVoiceFileRoute, async (c) => {
+  const body = c.req.valid('json');
+  const response = await fetch(`${VSS_API_URL}/vss/voice/issueVoiceFile.action`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return c.json(data);
+});
 
+// 3.21.7 Issue voice broadcast
+const OpenVoiceSchema = z.object({
+  pcmNo: z.string(),
+  deviceId: z.string(),
+  token: z.string(),
+});
 const openVoiceRoute = createRoute({
   method: 'post',
   path: '/voice/openVoice.action',
@@ -227,106 +188,19 @@ const openVoiceRoute = createRoute({
       },
     },
   },
-  responses: {
-    200: {
-      description: 'Successful operation',
-      content: {
-        'application/json': {
-          schema: z.object({}),
-        },
-      },
-    },
-    500: {
-      description: 'Internal Server Error',
-      content: {
-        'application/json': {
-          schema: z.object({ error: z.string() }),
-        },
-      },
-    },
-  },
-  summary: 'Open Voice',
-  description: 'Opens voice communication.',
-  tags: ['Voice'], // Added tag
-})
-
-// Register routes
-app.openapi(addVoiceFileRoute, async (c) => {
-  const body = c.req.valid('json')
-  const result = await fetch(`${VSS_API_URL}/vss/voice/addVoiceFile.action`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-  const data = await result.json()
-  return c.json(data)
-})
-
-app.openapi(deleteVoiceFileRoute, async (c) => {
-  const body = c.req.valid('json')
-  const result = await fetch(`${VSS_API_URL}/vss/voice/deleteVoiceFile.action`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-  const data = await result.json()
-  return c.json(data)
-})
-
-app.openapi(updateVoiceFileRoute, async (c) => {
-  const body = c.req.valid('json')
-  const result = await fetch(`${VSS_API_URL}/vss/voice/updateVoiceFile.action`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-  const data = await result.json()
-  return c.json(data)
-})
-
-app.openapi(getVoiceFileRoute, async (c) => {
-  const body = c.req.valid('json')
-  const result = await fetch(`${VSS_API_URL}/vss/voice/getVoiceFile.action`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-  const data = await result.json()
-  return c.json(data)
-})
-
-app.openapi(issueVoiceFileRoute, async (c) => {
-  const body = c.req.valid('json')
-  const result = await fetch(`${VSS_API_URL}/vss/voice/issueVoiceFile.action`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-  const data = await result.json()
-  return c.json(data)
-})
-
+  responses: { 200: { description: 'Success' } },
+  summary: 'Issue voice broadcast',
+  tags: ['Voice'],
+});
 app.openapi(openVoiceRoute, async (c) => {
-  const body = c.req.valid('json')
-  const result = await fetch(`${VSS_API_URL}/vss/voice/openVoice.action`, {
+  const body = c.req.valid('json');
+  const response = await fetch(`${VSS_API_URL}/vss/voice/openVoice.action`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
-  })
-  const data = await result.json()
-  return c.json(data)
-})
+  });
+  const data = await response.json();
+  return c.json(data);
+});
 
-export default app
+export default app;
