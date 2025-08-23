@@ -39,6 +39,17 @@ const TaskManagementSchema = z.object({
   resWebPath: z.string(),
 })
 
+const FindPageSchema = z.object({
+  token: z.string(),
+  pageNum: z.number(),
+  pageCount: z.number(),
+  taskStartTime: z.string(),
+  taskEndTime: z.string(),
+  deviceNo: z.string(),
+  username: z.string(),
+  
+})
+
 // Routes
 const videoFileSearchRoute = createRoute({
   method: 'post',
@@ -175,8 +186,43 @@ const taskManagementRoute= createRoute({
       },
     },
   },
-  summary: 'Insert Web Down Record',
-  description: 'Inserts a web download record.',
+  summary: 'Task Management',
+  description: 'Task Management.',
+  tags: ['Video'], // Added tag
+})
+
+const findPageSchemaRoute= createRoute({
+  method: 'post',
+  path: '/webdownrecord/findPage.action',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: FindPageSchema,
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: 'Successfull Search',
+      content: {
+        'application/json': {
+          schema: z.object({}),
+        },
+      },
+    },
+    500: {
+      description: 'Internal Server Error',
+      content: {
+        'application/json': {
+          schema: z.object({ error: z.string() }),
+        },
+      },
+    },
+  },
+  summary: 'Find Page',
+  description: 'Find Page',
   tags: ['Video'], // Added tag
 })
 
@@ -223,6 +269,19 @@ app.openapi(findTaskProgressRoute, async (c) => {
 app.openapi(taskManagementRoute, async (c) => {
   const body = c.req.valid('json')
   const response = await fetch(`${VSS_API_URL}/vss/webdownrecord/taskManagement.action`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  const data = await response.json()
+  return c.json(data)
+})
+
+app.openapi(findPageSchemaRoute, async (c) => {
+  const body = c.req.valid('json')
+  const response = await fetch(`${VSS_API_URL}/vss/webdownrecord/findPage.action`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
