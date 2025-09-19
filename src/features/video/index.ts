@@ -456,7 +456,7 @@ app.openapi(realVideoRoute, async (c) => {
       })
       .replace(/src="([^"]*)"/g, (match, path) => {
         if (path.startsWith('http') || path.startsWith('//')) return match
-        if (path.includes('/dist/player/player.js')) return `src="${path.replace('../dist/player/player.js', 'https://icognis.imaniprima.co.id/api/dist/player/player.js')}"`
+        if (path.includes('/dist/player/player.js')) return `src="${path.replace('../dist/player/player.js', 'https://vss.gtrack.co.id/vss/dist/player/player.js')}"`
         if (path.includes('pcm-player.js')) return `src="https://vss.gtrack.co.id/vss/dist/player/pcm-player.js?v=1.8.6"`
         if (path.includes('howen_video_player.js')) return `src="https://vss.gtrack.co.id/vss/js/howen_video_player.js?v=1.8.6"`
         if (path.startsWith('../js/')) return `src="${baseUrl}/vss/js/${path.substring(6)}"`
@@ -473,7 +473,7 @@ app.openapi(realVideoRoute, async (c) => {
       .replace(/src='font\/([^']*)'/g, `src='${baseUrl}/vss/apiPage/font/$1'`)
       .replace(/src="font\/([^"]*)"/g, `src="${baseUrl}/vss/apiPage/font/$1"`)
       // Replace WebSocket worker URL in player.js
-      .replace(/\/vss\/dist\/player\/hwwebsocket\.js\?v=1\.8\.6/g, `/api/dist/player/hwwebsocket.js?v=1.8.6`)
+      .replace(/\/vss\/dist\/player\/hwwebsocket\.js\?v=1\.8\.6/g, `https://vss.gtrack.co.id/vss/dist/player/hwwebsocket.js?v=1.8.6`)
 
     console.log('HTML content modified successfully')
     
