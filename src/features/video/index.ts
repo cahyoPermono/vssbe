@@ -307,6 +307,32 @@ const hwWebsocketRoute = createRoute({
   tags: ['Video'],
 })
 
+const playerJsRoute = createRoute({
+  method: 'get',
+  path: '/dist/player/player.js',
+  responses: {
+    200: {
+      description: 'Player JavaScript file',
+      content: {
+        'application/javascript': {
+          schema: z.string(),
+        },
+      },
+    },
+    500: {
+      description: 'Internal Server Error',
+      content: {
+        'application/json': {
+          schema: z.object({ error: z.string() }),
+        },
+      },
+    },
+  },
+  summary: 'Proxy player.js file',
+  description: 'Forwards request to player.js file from the original server.',
+  tags: ['Video'],
+})
+
 
 
 // Register routes
@@ -443,6 +469,8 @@ app.openapi(realVideoRoute, async (c) => {
       // Replace font URLs in JavaScript strings
       .replace(/src='font\/([^']*)'/g, `src='${baseUrl}/vss/apiPage/font/$1'`)
       .replace(/src="font\/([^"]*)"/g, `src="${baseUrl}/vss/apiPage/font/$1"`)
+      // Replace WebSocket worker URL in player.js
+      .replace(/\/vss\/dist\/player\/hwwebsocket\.js\?v=1\.8\.6/g, `https://vss.gtrack.co.id/vss/dist/player/hwwebsocket.js?v=1.8.6`)
 
     console.log('HTML content modified successfully')
     
@@ -461,9 +489,10 @@ app.openapi(hwWebsocketRoute, async (c) => {
     // Get query parameters from the request
     const queryParams = c.req.query()
     const queryString = new URLSearchParams(queryParams).toString()
+    // Changed to use the production URL instead of VSS_API_URL
     const targetUrl = queryString
-      ? `${VSS_API_URL}/dist/player/hwwebsocket.js?${queryString}`
-      : `${VSS_API_URL}/dist/player/hwwebsocket.js`
+      ? `https://vss.gtrack.co.id/vss/dist/player/hwwebsocket.js?${queryString}`
+      : 'https://vss.gtrack.co.id/vss/dist/player/hwwebsocket.js?v=1.8.6'
 
     console.log('Fetching from:', targetUrl)
 
@@ -481,6 +510,41 @@ app.openapi(hwWebsocketRoute, async (c) => {
   } catch (error) {
     console.error('Error proxying hwwebsocket.js:', error)
     return c.json({ error: 'Failed to fetch hwwebsocket.js file' }, 500)
+  }
+})
+
+app.openapi(playerJsRoute, async (c) => {
+  try {
+    // Get query parameters from the request
+    const queryParams = c.req.query()
+    const queryString = new URLSearchParams(queryParams).toString()
+    // Use the production URL
+    const targetUrl = queryString
+      ? `https://vss.gtrack.co.id/vss/dist/player/player.js?${queryString}`
+      : 'https://vss.gtrack.co.id/vss/dist/player/player.js?v=1.8.6'
+
+    console.log('Fetching from:', targetUrl)
+
+    const response = await fetch(targetUrl)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    
+    let jsContent = await response.text()
+    
+    // Replace WebSocket worker URL in player.js
+    jsContent = jsContent.replace(
+      /\/vss\/dist\/player\/hwwebsocket\.js\?v=1\.8\.6/g,
+      `https://vss.gtrack.co.id/vss/dist/player/hwwebsocket.js?v=1.8.6`
+    )
+    
+    // Set the correct content type for JavaScript
+    c.header('Content-Type', 'application/javascript')
+    
+    return c.body(jsContent)
+  } catch (error) {
+    console.error('Error proxying player.js:', error)
+    return c.json({ error: 'Failed to fetch player.js file' }, 500)
   }
 })
 
