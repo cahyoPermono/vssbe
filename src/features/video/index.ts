@@ -422,7 +422,7 @@ app.openapi(realVideoRoute, async (c) => {
     
     // Set headers to allow iframe embedding
     c.header('X-Frame-Options', 'ALLOWALL')
-    c.header('Content-Security-Policy', "frame-ancestors 'self' *;")
+    c.header('Content-Security-Policy', "frame-ancestors 'self' * https:;")
 
     return c.html(htmlContent)
   } catch (error) {

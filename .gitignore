@@ -29,4 +29,5 @@ lerna-debug.log*
 
 Gtrack VSS Web API_V2.2.0R2_eng_2024.04.22.pdf
 
-dist/
+# ignore semua isi folder dist
+dist/*

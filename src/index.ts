@@ -79,7 +79,7 @@ app.use('*', logger())
 app.use('*', prettyJSON())
 app.use('*', secureHeaders({
   contentSecurityPolicy: {
-    frameAncestors: ['*'], // Allow framing from any domain
+    frameAncestors: ['*', 'https:'], // Allow framing from any domain, explicitly including https
   },
   xFrameOptions: false, // Disable X-Frame-Options to avoid conflicts
 }))
