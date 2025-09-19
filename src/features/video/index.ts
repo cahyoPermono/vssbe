@@ -547,7 +547,7 @@ app.openapi(playerJsRoute, async (c) => {
     // Replace WebSocket worker URL in player.js
     jsContent = jsContent.replace(
       /\/vss\/dist\/player\/hwwebsocket\.js\?v=1\.8\.6/g,
-      `/api/dist/player/hwwebsocket.js?v=1.8.6`
+      `https://vss.gtrack.co.id/vss/dist/player/hwwebsocket.js?v=1.8.6`
     )
 
     // Replace common.js URL in player.js
