@@ -456,7 +456,9 @@ app.openapi(realVideoRoute, async (c) => {
       })
       .replace(/src="([^"]*)"/g, (match, path) => {
         if (path.startsWith('http') || path.startsWith('//')) return match
-        if (path.includes('player.js')) return `src="${path.replace('../dist/player/player.js', 'https://icognis.imaniprima.co.id/api/dist/player/player.js')}"`
+        if (path.includes('/dist/player/player.js')) return `src="${path.replace('../dist/player/player.js', 'https://icognis.imaniprima.co.id/api/dist/player/player.js')}"`
+        if (path.includes('pcm-player.js')) return `src="https://vss.gtrack.co.id/vss/dist/player/pcm-player.js?v=1.8.6"`
+        if (path.includes('howen_video_player.js')) return `src="https://vss.gtrack.co.id/vss/js/howen_video_player.js?v=1.8.6"`
         if (path.startsWith('../js/')) return `src="${baseUrl}/vss/js/${path.substring(6)}"`
         if (path.startsWith('../dist/')) return `src="${baseUrl}/vss/dist/${path.substring(7)}"`
         if (path.startsWith('font/')) return `src="${baseUrl}/vss/apiPage/${path}"`
