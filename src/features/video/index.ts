@@ -540,6 +540,15 @@ app.openapi(playerJsRoute, async (c) => {
       /\/vss\/dist\/player\/hwwebsocket\.js\?v=1\.8\.6/g,
       `/api/dist/player/hwwebsocket.js?v=1.8.6`
     )
+
+    // Replace common.js URL in player.js
+    jsContent = jsContent.replace(
+      /'common\.js'/g,
+      `'https://vss.gtrack.co.id/vss/dist/player/common.js'`
+    ).replace(
+      /"common\.js"/g,
+      `"https://vss.gtrack.co.id/vss/dist/player/common.js"`
+    )
     
     // Set the correct content type for JavaScript
     c.header('Content-Type', 'application/javascript')
