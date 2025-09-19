@@ -281,6 +281,32 @@ const proxyJsRoute = createRoute({
   tags: ['Video'],
 })
 
+const hwWebsocketRoute = createRoute({
+  method: 'get',
+  path: '/dist/player/hwwebsocket.js',
+  responses: {
+    200: {
+      description: 'WebSocket player JavaScript file',
+      content: {
+        'application/javascript': {
+          schema: z.string(),
+        },
+      },
+    },
+    500: {
+      description: 'Internal Server Error',
+      content: {
+        'application/json': {
+          schema: z.object({ error: z.string() }),
+        },
+      },
+    },
+  },
+  summary: 'Proxy hwwebsocket.js file',
+  description: 'Forwards request to hwwebsocket.js file from the original server.',
+  tags: ['Video'],
+})
+
 
 
 // Register routes
@@ -427,6 +453,34 @@ app.openapi(realVideoRoute, async (c) => {
     return c.html(htmlContent)
   } catch (error) {
     return c.json({ error: 'Failed to fetch real video page' }, 500)
+  }
+})
+
+app.openapi(hwWebsocketRoute, async (c) => {
+  try {
+    // Get query parameters from the request
+    const queryParams = c.req.query()
+    const queryString = new URLSearchParams(queryParams).toString()
+    const targetUrl = queryString
+      ? `${VSS_API_URL}/dist/player/hwwebsocket.js?${queryString}`
+      : `${VSS_API_URL}/dist/player/hwwebsocket.js`
+
+    console.log('Fetching from:', targetUrl)
+
+    const response = await fetch(targetUrl)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    
+    const jsContent = await response.text()
+    
+    // Set the correct content type for JavaScript
+    c.header('Content-Type', 'application/javascript')
+    
+    return c.body(jsContent)
+  } catch (error) {
+    console.error('Error proxying hwwebsocket.js:', error)
+    return c.json({ error: 'Failed to fetch hwwebsocket.js file' }, 500)
   }
 })
 
