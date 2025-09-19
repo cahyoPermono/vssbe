@@ -102,6 +102,41 @@ app.route('/api', video)
 app.route('/api', voice)
 app.route('/api', area)
 
+// CORS Proxy Routes for AJAX calls
+app.post('/vss/vehicle/queryGtOfDevice.action', async (c) => {
+  try {
+    const body = await c.req.json()
+    const response = await fetch('http://202.78.201.165:9966/vss/vehicle/queryGtOfDevice.action', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    const data = await response.json()
+    return c.json(data)
+  } catch (error) {
+    return c.json({ error: 'Failed to proxy vehicle query request' }, 500)
+  }
+})
+
+app.post('/vss/vehicle/findUnregistered.action', async (c) => {
+  try {
+    const body = await c.req.json()
+    const response = await fetch('http://202.78.201.165:9966/vss/vehicle/findUnregistered.action', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    const data = await response.json()
+    return c.json(data)
+  } catch (error) {
+    return c.json({ error: 'Failed to proxy vehicle unregistered request' }, 500)
+  }
+})
+
 // Expose OpenAPI JSON at /doc
 app.doc('/doc', {
   openapi: '3.0.0',

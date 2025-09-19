@@ -47,8 +47,11 @@ const FindPageSchema = z.object({
   taskEndTime: z.string(),
   deviceNo: z.string(),
   username: z.string(),
-  
+
 })
+
+// Real Video Route Schema (no body needed for GET)
+const RealVideoSchema = z.object({})
 
 // Routes
 const videoFileSearchRoute = createRoute({
@@ -226,6 +229,60 @@ const findPageSchemaRoute= createRoute({
   tags: ['Video'], // Added tag
 })
 
+const realVideoRoute = createRoute({
+  method: 'get',
+  path: '/realvideo.html',
+  responses: {
+    200: {
+      description: 'Real video page content',
+      content: {
+        'text/html': {
+          schema: z.string(),
+        },
+      },
+    },
+    500: {
+      description: 'Internal Server Error',
+      content: {
+        'application/json': {
+          schema: z.object({ error: z.string() }),
+        },
+      },
+    },
+  },
+  summary: 'Get Real Video Page',
+  description: 'Forwards request to the real video page.',
+  tags: ['Video'],
+})
+
+const proxyJsRoute = createRoute({
+  method: 'get',
+  path: '/common.js',
+  responses: {
+    200: {
+      description: 'JavaScript file with URLs modified',
+      content: {
+        'application/javascript': {
+          schema: z.string(),
+        },
+      },
+    },
+    500: {
+      description: 'Internal Server Error',
+      content: {
+        'application/json': {
+          schema: z.object({ error: z.string() }),
+        },
+      },
+    },
+  },
+  summary: 'Proxy JavaScript file',
+  description: 'Serves JavaScript file with URLs modified.',
+  tags: ['Video'],
+})
+
+
+
 // Register routes
 app.openapi(videoFileSearchRoute, async (c) => {
   const body = c.req.valid('json')
@@ -290,6 +347,83 @@ app.openapi(findPageSchemaRoute, async (c) => {
   })
   const data = await response.json()
   return c.json(data)
+})
+
+app.openapi(proxyJsRoute, async (c) => {
+  try {
+    const response = await fetch('http://202.78.201.165:9966/vss/apiPage/common.js')
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    let jsContent = await response.text()
+
+    // Replace relative URLs with proxy URLs to avoid CORS issues
+    const proxyBaseUrl = 'http://localhost:3000'
+    jsContent = jsContent
+      .replace(/url:\s*'\/vss\/vehicle\/queryGtOfDevice\.action'/g, `url: '${proxyBaseUrl}/vss/vehicle/queryGtOfDevice.action'`)
+      .replace(/url:\s*"\/vss\/vehicle\/queryGtOfDevice\.action"/g, `url: "${proxyBaseUrl}/vss/vehicle/queryGtOfDevice.action"`)
+      .replace(/url:\s*'\/vss\/vehicle\/findUnregistered\.action'/g, `url: '${proxyBaseUrl}/vss/vehicle/findUnregistered.action'`)
+      .replace(/url:\s*"\/vss\/vehicle\/findUnregistered\.action"/g, `url: "${proxyBaseUrl}/vss/vehicle/findUnregistered.action"`)
+
+    c.header('Content-Type', 'application/javascript')
+    return c.body(jsContent, 200, { 'Content-Type': 'application/javascript' })
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch JavaScript file' }, 500)
+  }
+})
+
+
+
+app.openapi(realVideoRoute, async (c) => {
+  try {
+    // Get query parameters from the request
+    const queryParams = c.req.query()
+    const queryString = new URLSearchParams(queryParams).toString()
+    const targetUrl = queryString
+      ? `http://202.78.201.165:9966/vss/apiPage/RealVideo.html?${queryString}`
+      : 'http://202.78.201.165:9966/vss/apiPage/RealVideo.html'
+
+    console.log('Fetching from:', targetUrl)
+
+    const response = await fetch(targetUrl)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    let htmlContent = await response.text()
+
+    // Replace relative URLs with absolute URLs pointing to the original server
+    const baseUrl = 'http://202.78.201.165:9966'
+
+    // Replace all href and src attributes that are relative URLs
+    htmlContent = htmlContent
+      .replace(/href="([^"]*)"/g, (match, path) => {
+        if (path.startsWith('http') || path.startsWith('//')) return match
+        if (path.startsWith('font/')) return `href="${baseUrl}/vss/apiPage/${path}"`
+        if (path.startsWith('real_time.css')) return `href="${baseUrl}/vss/apiPage/${path}"`
+        return `href="${baseUrl}/vss/apiPage/${path}"`
+      })
+      .replace(/src="([^"]*)"/g, (match, path) => {
+        if (path.startsWith('http') || path.startsWith('//')) return match
+        if (path.startsWith('../js/')) return `src="${baseUrl}/vss/js/${path.substring(6)}"`
+        if (path.startsWith('../dist/')) return `src="${baseUrl}/vss/dist/${path.substring(7)}"`
+        if (path.startsWith('font/')) return `src="${baseUrl}/vss/apiPage/${path}"`
+        if (path.startsWith('real_time.css')) return `src="${baseUrl}/vss/apiPage/${path}"`
+        if (path.includes('common.js')) return `src="http://localhost:3000/api/common.js"`
+        return `src="${baseUrl}/vss/apiPage/${path}"`
+      })
+      // Replace hardcoded AJAX URLs in JavaScript
+      .replace(/url:\s*'\/([^']*)'/g, `url: '${baseUrl}/$1'`)
+      .replace(/url:\s*"\/([^"]*)"/g, `url: "${baseUrl}/$1"`)
+      // Replace font URLs in JavaScript strings
+      .replace(/src='font\/([^']*)'/g, `src='${baseUrl}/vss/apiPage/font/$1'`)
+      .replace(/src="font\/([^"]*)"/g, `src="${baseUrl}/vss/apiPage/font/$1"`)
+
+    console.log('HTML content modified successfully')
+
+    return c.html(htmlContent)
+  } catch (error) {
+    return c.json({ error: 'Failed to fetch real video page' }, 500)
+  }
 })
 
 export default app
