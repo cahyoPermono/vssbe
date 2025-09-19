@@ -77,7 +77,12 @@ app.onError((err, c) => {
 // Middlewares
 app.use('*', logger())
 app.use('*', prettyJSON())
-app.use('*', secureHeaders())
+app.use('*', secureHeaders({
+  contentSecurityPolicy: {
+    frameAncestors: ['*'], // Allow framing from any domain
+  },
+  xFrameOptions: false, // Disable X-Frame-Options to avoid conflicts
+}))
 app.use('*', cors())
 
 // Root Route

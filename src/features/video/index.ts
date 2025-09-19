@@ -413,12 +413,16 @@ app.openapi(realVideoRoute, async (c) => {
       })
       // Replace hardcoded AJAX URLs in JavaScript
       .replace(/url:\s*'\/([^']*)'/g, `url: '${baseUrl}/$1'`)
-      .replace(/url:\s*"\/([^"]*)"/g, `url: "${baseUrl}/$1"`)
+      .replace(/url:\s*"[^"]*"/g, `url: "${baseUrl}/$1"`)
       // Replace font URLs in JavaScript strings
       .replace(/src='font\/([^']*)'/g, `src='${baseUrl}/vss/apiPage/font/$1'`)
       .replace(/src="font\/([^"]*)"/g, `src="${baseUrl}/vss/apiPage/font/$1"`)
 
     console.log('HTML content modified successfully')
+    
+    // Set headers to allow iframe embedding
+    c.header('X-Frame-Options', 'ALLOWALL')
+    c.header('Content-Security-Policy', "frame-ancestors 'self' *;")
 
     return c.html(htmlContent)
   } catch (error) {
