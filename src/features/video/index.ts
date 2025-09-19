@@ -358,7 +358,7 @@ app.openapi(proxyJsRoute, async (c) => {
     let jsContent = await response.text()
 
     // Replace relative URLs with proxy URLs to avoid CORS issues
-    const proxyBaseUrl = 'http://localhost:3000'
+    const proxyBaseUrl = 'https://icognis.imaniprima.co.id'
     jsContent = jsContent
       .replace(/url:\s*'\/vss\/vehicle\/queryGtOfDevice\.action'/g, `url: '${proxyBaseUrl}/vss/vehicle/queryGtOfDevice.action'`)
       .replace(/url:\s*"\/vss\/vehicle\/queryGtOfDevice\.action"/g, `url: "${proxyBaseUrl}/vss/vehicle/queryGtOfDevice.action"`)
@@ -408,7 +408,7 @@ app.openapi(realVideoRoute, async (c) => {
         if (path.startsWith('../dist/')) return `src="${baseUrl}/vss/dist/${path.substring(7)}"`
         if (path.startsWith('font/')) return `src="${baseUrl}/vss/apiPage/${path}"`
         if (path.startsWith('real_time.css')) return `src="${baseUrl}/vss/apiPage/${path}"`
-        if (path.includes('common.js')) return `src="http://localhost:3000/api/common.js"`
+        if (path.includes('common.js')) return `src="https://icognis.imaniprima.co.id/api/common.js"`
         return `src="${baseUrl}/vss/apiPage/${path}"`
       })
       // Replace hardcoded AJAX URLs in JavaScript
