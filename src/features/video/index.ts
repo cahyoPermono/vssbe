@@ -504,7 +504,16 @@ app.openapi(hwWebsocketRoute, async (c) => {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
     
-    const jsContent = await response.text()
+    let jsContent = await response.text()
+
+    // Replace common.js URL in hwwebsocket.js
+    jsContent = jsContent.replace(
+      /'common\.js'/g,
+      `'https://vss.gtrack.co.id/vss/dist/player/common.js'`
+    ).replace(
+      /"common\.js"/g,
+      `"https://vss.gtrack.co.id/vss/dist/player/common.js"`
+    )
     
     // Set the correct content type for JavaScript
     c.header('Content-Type', 'application/javascript')
