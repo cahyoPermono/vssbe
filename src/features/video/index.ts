@@ -456,6 +456,7 @@ app.openapi(realVideoRoute, async (c) => {
       })
       .replace(/src="([^"]*)"/g, (match, path) => {
         if (path.startsWith('http') || path.startsWith('//')) return match
+        if (path.includes('player.js')) return `src="${path.replace('../dist/player/player.js', 'https://icognis.imaniprima.co.id/api/dist/player/player.js')}"`
         if (path.startsWith('../js/')) return `src="${baseUrl}/vss/js/${path.substring(6)}"`
         if (path.startsWith('../dist/')) return `src="${baseUrl}/vss/dist/${path.substring(7)}"`
         if (path.startsWith('font/')) return `src="${baseUrl}/vss/apiPage/${path}"`
