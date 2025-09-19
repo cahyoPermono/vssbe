@@ -473,7 +473,7 @@ app.openapi(realVideoRoute, async (c) => {
       .replace(/src='font\/([^']*)'/g, `src='${baseUrl}/vss/apiPage/font/$1'`)
       .replace(/src="font\/([^"]*)"/g, `src="${baseUrl}/vss/apiPage/font/$1"`)
       // Replace WebSocket worker URL in player.js
-      .replace(/\/vss\/dist\/player\/hwwebsocket\.js\?v=1\.8\.6/g, `https://vss.gtrack.co.id/vss/dist/player/hwwebsocket.js?v=1.8.6`)
+      .replace(/\/vss\/dist\/player\/hwwebsocket\.js\?v=1\.8\.6/g, `/api/dist/player/hwwebsocket.js?v=1.8.6`)
 
     console.log('HTML content modified successfully')
     
@@ -538,7 +538,7 @@ app.openapi(playerJsRoute, async (c) => {
     // Replace WebSocket worker URL in player.js
     jsContent = jsContent.replace(
       /\/vss\/dist\/player\/hwwebsocket\.js\?v=1\.8\.6/g,
-      `https://vss.gtrack.co.id/vss/dist/player/hwwebsocket.js?v=1.8.6`
+      `/api/dist/player/hwwebsocket.js?v=1.8.6`
     )
     
     // Set the correct content type for JavaScript
