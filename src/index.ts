@@ -106,7 +106,7 @@ app.route('/api', area)
 app.post('/vss/vehicle/queryGtOfDevice.action', async (c) => {
   try {
     const body = await c.req.json()
-    const response = await fetch('http://202.78.201.165:9966/vss/vehicle/queryGtOfDevice.action', {
+    const response = await fetch('https://vss.gtrack.co.id/vss/vehicle/queryGtOfDevice.action', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ app.post('/vss/vehicle/queryGtOfDevice.action', async (c) => {
 app.post('/vss/vehicle/findUnregistered.action', async (c) => {
   try {
     const body = await c.req.json()
-    const response = await fetch('http://202.78.201.165:9966/vss/vehicle/findUnregistered.action', {
+    const response = await fetch('https://vss.gtrack.co.id/vss/vehicle/findUnregistered.action', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

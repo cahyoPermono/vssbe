@@ -351,7 +351,7 @@ app.openapi(findPageSchemaRoute, async (c) => {
 
 app.openapi(proxyJsRoute, async (c) => {
   try {
-    const response = await fetch('http://202.78.201.165:9966/vss/apiPage/common.js')
+    const response = await fetch('https://vss.gtrack.co.id/vss/apiPage/common.js')
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
@@ -380,8 +380,8 @@ app.openapi(realVideoRoute, async (c) => {
     const queryParams = c.req.query()
     const queryString = new URLSearchParams(queryParams).toString()
     const targetUrl = queryString
-      ? `http://202.78.201.165:9966/vss/apiPage/RealVideo.html?${queryString}`
-      : 'http://202.78.201.165:9966/vss/apiPage/RealVideo.html'
+      ? `https://vss.gtrack.co.id/vss/apiPage/RealVideo.html?${queryString}`
+      : 'https://vss.gtrack.co.id/vss/apiPage/RealVideo.html'
 
     console.log('Fetching from:', targetUrl)
 
@@ -392,7 +392,7 @@ app.openapi(realVideoRoute, async (c) => {
     let htmlContent = await response.text()
 
     // Replace relative URLs with absolute URLs pointing to the original server
-    const baseUrl = 'http://202.78.201.165:9966'
+    const baseUrl = 'https://vss.gtrack.co.id'
 
     // Replace all href and src attributes that are relative URLs
     htmlContent = htmlContent
