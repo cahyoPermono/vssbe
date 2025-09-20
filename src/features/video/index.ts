@@ -530,12 +530,6 @@ app.openapi(hwWebsocketRoute, async (c) => {
     }
     
     let jsContent = await response.text()
-
-    // Replace common.js URL in hwwebsocket.js
-    jsContent = jsContent.replace(
-      /common\.js/g,
-      `/api/dist/player/common.js`
-    )
     
     // Set the correct content type for JavaScript
     c.header('Content-Type', 'application/javascript')
@@ -570,12 +564,6 @@ app.openapi(playerJsRoute, async (c) => {
     jsContent = jsContent.replace(
       /\/vss\/dist\/player\/hwwebsocket\.js\?v=1\.8\.6/g,
       `/api/dist/player/hwwebsocket.js?v=1.8.6`
-    )
-
-    // Replace common.js URL in player.js
-    jsContent = jsContent.replace(
-      /common\.js/g,
-      `/api/dist/player/common.js`
     )
     
     // Set the correct content type for JavaScript
