@@ -610,6 +610,7 @@ app.openapi(hwWebsocketRoute, async (c) => {
     let jsContent = await response.text()
 
     jsContent = jsContent
+      .replace(/self\.location\.hostname/g, `'vss.gtrack.co.id'`)
       .replace(/location\.hostname/g, `'vss.gtrack.co.id'`)
       .replace(/document\.location\.hostname/g, `'vss.gtrack.co.id'`)
       .replace(/window\.location\.hostname/g, `'vss.gtrack.co.id'`)
