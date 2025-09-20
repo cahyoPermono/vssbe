@@ -411,6 +411,32 @@ const libdecoderJsRoute = createRoute({
     tags: ['Video'],
 })
 
+const libdecoderWasmRoute = createRoute({
+    method: 'get',
+    path: '/dist/player/libdecoder.wasm',
+    responses: {
+        200: {
+            description: 'libdecoder.wasm for player',
+            content: {
+                'application/wasm': {
+                    schema: z.string(),
+                },
+            },
+        },
+        500: {
+            description: 'Internal Server Error',
+            content: {
+                'application/json': {
+                    schema: z.object({ error: z.string() }),
+                },
+            },
+        },
+    },
+    summary: 'Proxy libdecoder.wasm for player',
+    description: 'Forwards request to libdecoder.wasm file from the original server.',
+    tags: ['Video'],
+})
+
 
 // Register routes
 app.openapi(videoFileSearchRoute, async (c) => {
@@ -584,7 +610,7 @@ app.openapi(hwWebsocketRoute, async (c) => {
     let jsContent = await response.text()
 
     jsContent = jsContent.replace(
-      /document\.location\.hostname/g,
+      /location\.hostname/g,
       `'vss.gtrack.co.id'`
     )
     
@@ -702,6 +728,30 @@ app.openapi(libdecoderJsRoute, async (c) => {
     } catch (error) {
         console.error('Error proxying libdecoder.js for player:', error)
         return c.json({ error: 'Failed to fetch libdecoder.js file for player' }, 500)
+    }
+})
+
+app.openapi(libdecoderWasmRoute, async (c) => {
+    try {
+        const queryParams = c.req.query()
+        const queryString = new URLSearchParams(queryParams).toString()
+        const targetUrl = queryString
+            ? `https://vss.gtrack.co.id/vss/dist/player/libdecoder.wasm?${queryString}`
+            : 'https://vss.gtrack.co.id/vss/dist/player/libdecoder.wasm'
+
+        const response = await fetch(targetUrl)
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        const wasmContent = await response.arrayBuffer()
+        
+        c.header('Content-Type', 'application/wasm')
+        
+        return c.body(wasmContent)
+    } catch (error) {
+        console.error('Error proxying libdecoder.wasm for player:', error)
+        return c.json({ error: 'Failed to fetch libdecoder.wasm file for player' }, 500)
     }
 })
 
