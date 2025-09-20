@@ -609,10 +609,10 @@ app.openapi(hwWebsocketRoute, async (c) => {
     
     let jsContent = await response.text()
 
-    jsContent = jsContent.replace(
-      /location\.hostname/g,
-      `'vss.gtrack.co.id'`
-    )
+    jsContent = jsContent
+      .replace(/location\.hostname/g, `'vss.gtrack.co.id'`)
+      .replace(/document\.location\.hostname/g, `'vss.gtrack.co.id'`)
+      .replace(/window\.location\.hostname/g, `'vss.gtrack.co.id'`)
     
     // Set the correct content type for JavaScript
     c.header('Content-Type', 'application/javascript')
