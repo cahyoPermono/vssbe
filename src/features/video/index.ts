@@ -649,6 +649,12 @@ app.openapi(playerJsRoute, async (c) => {
       /\/vss\/dist\/player\/hwwebsocket\.js\?v=1\.8\.6/g,
       `/api/dist/player/hwwebsocket.js?v=1.8.6`
     )
+
+    jsContent = jsContent
+      .replace(/self\.location\.hostname/g, `'vss.gtrack.co.id'`)
+      .replace(/location\.hostname/g, `'vss.gtrack.co.id'`)
+      .replace(/document\.location\.hostname/g, `'vss.gtrack.co.id'`)
+      .replace(/window\.location\.hostname/g, `'vss.gtrack.co.id'`)
     
     // Set the correct content type for JavaScript
     c.header('Content-Type', 'application/javascript')
