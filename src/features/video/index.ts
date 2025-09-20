@@ -333,6 +333,31 @@ const playerJsRoute = createRoute({
   tags: ['Video'],
 })
 
+const commonJsPlayerRoute = createRoute({
+    method: 'get',
+    path: '/dist/player/common.js',
+    responses: {
+        200: {
+            description: 'common.js for player',
+            content: {
+                'application/javascript': {
+                    schema: z.string(),
+                },
+            },
+        },
+        500: {
+            description: 'Internal Server Error',
+            content: {
+                'application/json': {
+                    schema: z.object({ error: z.string() }),
+                },
+            },
+        },
+    },
+    summary: 'Proxy common.js for player',
+    description: 'Forwards request to common.js file from the original server.',
+    tags: ['Video'],
+})
 
 
 // Register routes
@@ -508,11 +533,8 @@ app.openapi(hwWebsocketRoute, async (c) => {
 
     // Replace common.js URL in hwwebsocket.js
     jsContent = jsContent.replace(
-      /'common\.js'/g,
-      `'https://vss.gtrack.co.id/vss/dist/player/common.js'`
-    ).replace(
-      /"common\.js"/g,
-      `"https://vss.gtrack.co.id/vss/dist/player/common.js"`
+      /common\.js/g,
+      `/api/dist/player/common.js`
     )
     
     // Set the correct content type for JavaScript
@@ -552,11 +574,8 @@ app.openapi(playerJsRoute, async (c) => {
 
     // Replace common.js URL in player.js
     jsContent = jsContent.replace(
-      /'common\.js'/g,
-      `'https://vss.gtrack.co.id/vss/dist/player/common.js'`
-    ).replace(
-      /"common\.js"/g,
-      `"https://vss.gtrack.co.id/vss/dist/player/common.js"`
+      /common\.js/g,
+      `/api/dist/player/common.js`
     )
     
     // Set the correct content type for JavaScript
@@ -567,6 +586,30 @@ app.openapi(playerJsRoute, async (c) => {
     console.error('Error proxying player.js:', error)
     return c.json({ error: 'Failed to fetch player.js file' }, 500)
   }
+})
+
+app.openapi(commonJsPlayerRoute, async (c) => {
+    try {
+        const queryParams = c.req.query()
+        const queryString = new URLSearchParams(queryParams).toString()
+        const targetUrl = queryString
+            ? `https://vss.gtrack.co.id/vss/dist/player/common.js?${queryString}`
+            : 'https://vss.gtrack.co.id/vss/dist/player/common.js'
+
+        const response = await fetch(targetUrl)
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        let jsContent = await response.text()
+        
+        c.header('Content-Type', 'application/javascript')
+        
+        return c.body(jsContent)
+    } catch (error) {
+        console.error('Error proxying common.js for player:', error)
+        return c.json({ error: 'Failed to fetch common.js file for player' }, 500)
+    }
 })
 
 export default app
