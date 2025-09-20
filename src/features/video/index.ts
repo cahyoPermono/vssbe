@@ -359,6 +359,32 @@ const commonJsPlayerRoute = createRoute({
     tags: ['Video'],
 })
 
+const decoderJsRoute = createRoute({
+    method: 'get',
+    path: '/dist/player/decoder.js',
+    responses: {
+        200: {
+            description: 'decoder.js for player',
+            content: {
+                'application/javascript': {
+                    schema: z.string(),
+                },
+            },
+        },
+        500: {
+            description: 'Internal Server Error',
+            content: {
+                'application/json': {
+                    schema: z.object({ error: z.string() }),
+                },
+            },
+        },
+    },
+    summary: 'Proxy decoder.js for player',
+    description: 'Forwards request to decoder.js file from the original server.',
+    tags: ['Video'],
+})
+
 
 // Register routes
 app.openapi(videoFileSearchRoute, async (c) => {
@@ -597,6 +623,30 @@ app.openapi(commonJsPlayerRoute, async (c) => {
     } catch (error) {
         console.error('Error proxying common.js for player:', error)
         return c.json({ error: 'Failed to fetch common.js file for player' }, 500)
+    }
+})
+
+app.openapi(decoderJsRoute, async (c) => {
+    try {
+        const queryParams = c.req.query()
+        const queryString = new URLSearchParams(queryParams).toString()
+        const targetUrl = queryString
+            ? `https://vss.gtrack.co.id/vss/dist/player/decoder.js?${queryString}`
+            : 'https://vss.gtrack.co.id/vss/dist/player/decoder.js'
+
+        const response = await fetch(targetUrl)
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        let jsContent = await response.text()
+        
+        c.header('Content-Type', 'application/javascript')
+        
+        return c.body(jsContent)
+    } catch (error) {
+        console.error('Error proxying decoder.js for player:', error)
+        return c.json({ error: 'Failed to fetch decoder.js file for player' }, 500)
     }
 })
 
