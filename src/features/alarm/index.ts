@@ -54,7 +54,7 @@ const findAllAlarmsByTimeRoute = createRoute({
 // Register the route with OpenAPIHono
 app.openapi(findAllAlarmsByTimeRoute, async (c) => {
   const body = c.req.valid('json')
-  const result = await fetch(`${VSS_API_URL}/vss/alarm/apiFindAllByTime.action`, {
+  const result = await fetch(`${VSS_API_URL}/alarm/apiFindAllByTime.action`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
